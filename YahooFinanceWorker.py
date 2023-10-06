@@ -4,19 +4,31 @@ import time
 from bs4 import BeautifulSoup
 
 
-class YahooFinancePriceWorker(threading.Thread):
+class YahooFinancePriceScheduler(threading.Thread):
+    def __init__(self, symbol_queue, **kwargs):
+        super(YahooFinancePriceScheduler, self).__init__(**kwargs)
+        self._symbol_queue = symbol_queue
+        self.start()
+
+    def run(self):
+        while True:
+            val = self._symbol_queue.get()
+            if val == 'DONE':
+                break
+            yahoo_finance_price_worker = YahooFinancePriceWorker(symbol=val)
+            price = yahoo_finance_price_worker.get_price()
+            print(val, price)
+            time.sleep(0.2)
+
+
+class YahooFinancePriceWorker():
     def __init__(self, symbol, **kwargs):
-        super(YahooFinancePriceWorker, self).__init__(**kwargs)
         self._price = None
         self._symbol = symbol
         base_url = "https://uk.finance.yahoo.com/quote/"
         self._url = '{0}{1}'.format(base_url, self._symbol)
-        self.start()
 
     def get_price(self):
-        return self._price
-
-    def run(self):
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
@@ -30,4 +42,4 @@ class YahooFinancePriceWorker(threading.Thread):
             return 0
         soup = BeautifulSoup(response.text)
         price_element = soup.find(attrs={"data-test": "qsp-price"})
-        self._price = price_element.attrs["value"]
+        return price_element.attrs["value"]
