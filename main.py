@@ -1,12 +1,7 @@
-import threading
 import time
 
 from WikiWorker import WikiWorker
 from YahooFinanceWorker import YahooFinancePriceWorker
-
-
-def calculate_sum_of_squares(n):
-    return sum([j ** 2 for j in range(n)])
 
 
 def main():
