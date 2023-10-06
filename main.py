@@ -9,35 +9,6 @@ def calculate_sum_of_squares(n):
     return sum([j ** 2 for j in range(n)])
 
 
-def main_old():
-    calc_start_time = time.time()
-
-    current_threads = []
-    for i in range(5):
-        maximum_value = (i + 1) * 1000000
-        t = threading.Thread(target=calculate_sum_of_squares, args=(maximum_value,))
-        t.start()
-        current_threads.append(t)
-
-    for i in range(len(current_threads)):
-        current_threads[i].join()
-
-    print('Calculating sum of squares took:', time.time() - calc_start_time)
-
-    sleep_start_time = time.time()
-
-    current_threads = []
-    for seconds in range(1, 6):
-        t = threading.Thread(target=lambda x: time.sleep(x), args=(seconds,))
-        t.start()
-        current_threads.append(t)
-
-    for i in range(len(current_threads)):
-        current_threads[i].join()
-
-    print('sleep took:', time.time() - sleep_start_time)
-
-
 def main():
     scraper_start_time = time.time()
     wikiWorker = WikiWorker()
