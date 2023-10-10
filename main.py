@@ -3,19 +3,27 @@ import time
 from multiprocessing import Queue
 
 from WikiWorker import WikiWorker
-from YahooFinanceWorker import YahooFinancePriceWorker, YahooFinancePriceScheduler
+from YahooFinanceWorker import YahooFinancePriceScheduler
+from SQLiteWorker import SQLLiteScheduler
 
 
 def main():
     symbol_queue = Queue()
+    sqlite_queue = Queue()
     scraper_start_time = time.time()
 
     wiki_worker = WikiWorker()
     yahoo_finance_price_scheduler_threads = []
     num_workers = 4
     for i in range(num_workers):
-        yahoo_finance_price_scheduler = YahooFinancePriceScheduler(symbol_queue=symbol_queue)
+        yahoo_finance_price_scheduler = YahooFinancePriceScheduler(symbol_queue=symbol_queue, output_queue=[sqlite_queue])
         yahoo_finance_price_scheduler_threads.append(yahoo_finance_price_scheduler)
+
+    sqlite_scheduler_threads = []
+    num_sqlite_workers = 2
+    for i in range(num_sqlite_workers):
+        postgres_scheduler = SQLLiteScheduler(sqlite_queue=sqlite_queue)
+        sqlite_scheduler_threads.append(postgres_scheduler)
 
     for symbol in wiki_worker.get_sp_500_companies():
         symbol_queue.put(symbol)

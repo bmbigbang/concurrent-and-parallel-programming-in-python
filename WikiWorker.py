@@ -8,7 +8,7 @@ class WikiWorker():
 
     @staticmethod
     def _extract_company_symbols(page_html):
-        soup = BeautifulSoup(page_html)
+        soup = BeautifulSoup(page_html, "html.parser")
         table = soup.find(id='constituents')
         table_rows = table.find_all('tr')
         for table_row in table_rows[1:]:
