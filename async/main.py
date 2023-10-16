@@ -21,6 +21,8 @@ async def main():
     await print_hello()
     # it appears we are running the two sleep tasks in parallel even though no other threads or processes are used
     print('total time:', time.time() - start)
+
+    start = time.time()
     # now we use gather() to run multiple tasks in parallel as an alternative way to run them all at the same time and
     # awaiting the final result of all of them
     try:
