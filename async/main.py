@@ -19,8 +19,12 @@ async def main():
     await async_sleep(2)
     await task
     await print_hello()
-    print('total time:', time.time() - start)
     # it appears we are running the two sleep tasks in parallel even though no other threads or processes are used
+    print('total time:', time.time() - start)
+    # now we use gather() to run multiple tasks in parallel as an alternative way to run them all at the same time and
+    # awaiting the final result of all of them
+    await asyncio.gather(async_sleep(1), async_sleep(2), print_hello())
+    print('total time:', time.time() - start)
 
 
 if __name__ == '__main__':
