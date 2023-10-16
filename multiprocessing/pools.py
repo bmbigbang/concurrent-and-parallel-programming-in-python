@@ -7,7 +7,7 @@ def square(add, x, y):
 
 
 num_processes = 4
-comparison_list = [1, 2, 3]
+addition_list = [1, 2, 3]
 power_list = [4, 5, 6]
 add = 2
 
@@ -19,6 +19,6 @@ partial_function = partial(square, add)
 
 if __name__ == '__main__':
     with Pool(num_cpu_to_use) as p:
-        result = p.starmap(partial_function, zip(comparison_list, power_list))
+        result = p.starmap(partial_function, zip(addition_list, power_list))
 
     print(result)
