@@ -23,7 +23,10 @@ async def main():
     print('total time:', time.time() - start)
     # now we use gather() to run multiple tasks in parallel as an alternative way to run them all at the same time and
     # awaiting the final result of all of them
-    await asyncio.gather(async_sleep(1), async_sleep(2), print_hello())
+    try:
+        await asyncio.gather(asyncio.wait_for(async_sleep(10), 5), async_sleep(2), print_hello())
+    except asyncio.TimeoutError:
+        print('Timed out waiting for sleep')
     print('total time:', time.time() - start)
 
 
